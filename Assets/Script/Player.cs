@@ -3,7 +3,7 @@ using UnityEngine;
 public class Player : Character
 {
     [Header("Movement")]
-    [field: SerializeField] public float speed = 5f;
+    [field: SerializeField] public float speed = 4f;
     [field: SerializeField] public float jumpForce = 7f;
     [field: SerializeField] int maxJump = 2;
 
