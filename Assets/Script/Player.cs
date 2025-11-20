@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Player : Character
@@ -24,7 +25,7 @@ public class Player : Character
     [field: SerializeField] Animator playerAnim;
     [field: SerializeField] Animator handAnim;
 
-    Rigidbody2D rb;
+    new Rigidbody2D rb;
     public float shootCooldown = 0.2f;
     private float shootTimer = 0f;
     int jumpCount;
@@ -33,8 +34,25 @@ public class Player : Character
     protected override void Awake()
     {
         base.Awake();
-        if(spriteRenderer == null)
+        if (spriteRenderer == null)
             spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
+
+        rb = GetComponentInChildren<Rigidbody2D>();
+        if (rb == null)
+            Debug.LogWarning("Player: Rigidbody2D not found on Player. Please add Rigidbody2D in Inspector.");
+
+        if (playerAnim == null)
+            playerAnim = GetComponentInChildren<Animator>();
+
+        if (handAnim == null)
+        {
+            Transform hand = transform.Find("HandBow"); 
+            if (hand != null)
+                handAnim = hand.GetComponent<Animator>();
+
+            if (handAnim == null)
+                Debug.LogWarning("Player: handAnim not assigned (HandBow animator not found).");
+        }
     }
 
     protected override void Start()
@@ -66,6 +84,19 @@ public class Player : Character
         {
             Spawn();
             shootTimer = 0f;
+        }
+
+        playerAnim.SetFloat("Speed", Mathf.Abs(h));
+        playerAnim.SetBool("IsGround", isGrounded);
+        playerAnim.SetFloat("VSpeed", rb.linearVelocity.y);
+        playerAnim.SetTrigger("Shoot");
+        playerAnim.SetBool("Jump", true);
+        playerAnim.SetTrigger("Dead");
+
+        if (Input.GetButtonDown("Fire1"))
+        {
+            playerAnim.SetTrigger("Shoot");
+            handAnim.SetTrigger("Shoot");
         }
     }
 

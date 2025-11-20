@@ -62,7 +62,7 @@ public abstract class Character : MonoBehaviour
             Die();
     }
 
-    protected  virtual void Update()
+    void Update()
     {
         if(isUnattackableAfterHit)
         {
