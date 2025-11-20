@@ -16,6 +16,13 @@ public class Player : Character
     public SpriteRenderer spriteRenderer;  
     public float fallDeathY = -20f;
 
+    [Header("Arrow")]
+    public GameObject Arrow;
+    public Transform shootPoint;
+
+
+    public float shootCooldown = 0.2f;
+    private float shootTimer = 0f;
     int jumpCount;
     bool isGrounded;
 
@@ -33,7 +40,7 @@ public class Player : Character
     }
 
 
-    private void Update()
+    void Update()
     {
         float h = Input.GetAxisRaw("Horizontal");
         if (spriteRenderer != null && h != 0)
@@ -48,6 +55,13 @@ public class Player : Character
         {
             
             GameManager.instance?.LoseLife();
+        }
+
+        shootTimer += Time.deltaTime;
+        if (Input.GetButtonDown("Fire1") && shootTimer >= shootCooldown)
+        {
+            Spawn();
+            shootTimer = 0f;
         }
     }
 
@@ -103,5 +117,27 @@ public class Player : Character
     {
         GameManager.instance?.LoseLife();
     }
+
+    protected void Spawn()
+    {
+            if (Arrow == null || shootPoint == null) return;
+            GameObject go = Instantiate(Arrow, shootPoint.position, Quaternion.identity);
+            Arrow a = go.GetComponent<Arrow>();
+            
+            float dir = transform.localScale.x < 0f ? -1f : 1f;
+            SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+            if (sr != null)
+                dir = sr.flipX ? -1f : 1f;
+            else
+                dir = transform.localScale.x < 0f ? -1f : 1f;
+
+            Debug.Log($"Spawn -> dir = {dir} (playerSprite.flipX = {(sr != null ? sr.flipX.ToString() : "null")}, localScale.x = {transform.localScale.x})");
+        if (a != null)
+        {
+            a.Init(dir);
+        }
+         
+    } 
+
 
 }
