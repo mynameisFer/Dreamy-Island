@@ -20,7 +20,11 @@ public class Player : Character
     public GameObject Arrow;
     public Transform shootPoint;
 
+    [Header("Animator")]
+    [field: SerializeField] Animator playerAnim;
+    [field: SerializeField] Animator handAnim;
 
+    Rigidbody2D rb;
     public float shootCooldown = 0.2f;
     private float shootTimer = 0f;
     int jumpCount;
@@ -120,23 +124,21 @@ public class Player : Character
 
     protected void Spawn()
     {
-            if (Arrow == null || shootPoint == null) return;
-            GameObject go = Instantiate(Arrow, shootPoint.position, Quaternion.identity);
-            Arrow a = go.GetComponent<Arrow>();
-            
-            float dir = transform.localScale.x < 0f ? -1f : 1f;
-            SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
-            if (sr != null)
-                dir = sr.flipX ? -1f : 1f;
-            else
-                dir = transform.localScale.x < 0f ? -1f : 1f;
+        if (Arrow == null || shootPoint == null) return;
 
-            Debug.Log($"Spawn -> dir = {dir} (playerSprite.flipX = {(sr != null ? sr.flipX.ToString() : "null")}, localScale.x = {transform.localScale.x})");
-        if (a != null)
-        {
-            a.Init(dir);
-        }
-         
+        GameObject go = Instantiate(Arrow, shootPoint.position, Quaternion.identity);
+        Arrow a = go.GetComponent<Arrow>();
+        if (a == null) return;
+
+        
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+        float dir = 1f;
+        if (sr != null)
+            dir = sr.flipX ? -1f : 1f;
+        else
+            dir = transform.localScale.x < 0 ? -1f : 1f;
+
+        a.Init(dir);
     } 
 
 

@@ -255,7 +255,7 @@ Animator:
   m_GameObject: {fileID: 33447769}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0f7ea37d1e3aea44d907a9176daf60dd, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1545,7 +1545,7 @@ Animator:
   m_GameObject: {fileID: 1256280617}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 878811e0536e35d4d889940a86422b1e, type: 2}
+  m_Controller: {fileID: 9100000, guid: 4223db6064487434a8655353b3cead34, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3847,6 +3847,8 @@ MonoBehaviour:
   fallDeathY: -20
   Arrow: {fileID: 2365862197138237626, guid: f8fa55cea4a1ec747ab95218b2ed11d1, type: 3}
   shootPoint: {fileID: 1543205422}
+  playerAnim: {fileID: 0}
+  handAnim: {fileID: 0}
   shootCooldown: 0.2
 --- !u!1 &1649366451
 GameObject:
