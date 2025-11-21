@@ -1,5 +1,7 @@
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using UnityEngine;
+
 
 public class Player : Character
 {
@@ -9,12 +11,12 @@ public class Player : Character
     [field: SerializeField] int maxJump = 2;
 
     [Header("Ground Check")]
-    public Transform groundCheck;         
+    public Transform groundCheck;
     public float groundCheckRadius = 0.08f;
-    public LayerMask groundLayer;          
+    public LayerMask groundLayer;
 
     [Header("Other")]
-    public SpriteRenderer spriteRenderer;  
+    public SpriteRenderer spriteRenderer;
     public float fallDeathY = -20f;
 
     [Header("Arrow")]
@@ -25,37 +27,33 @@ public class Player : Character
     [field: SerializeField] Animator playerAnim;
     [field: SerializeField] Animator handAnim;
 
-    new Rigidbody2D rb;
+    private Rigidbody2D rb;
     public float shootCooldown = 0.2f;
     private float shootTimer = 0f;
     int jumpCount;
     bool isGrounded;
 
-    [field: SerializeField] public int Coin { get; set; } = 0;
-    
-
-    public void OnTriggerEnter2D(Collider2D collision)
-    {
-        Item item = collision.GetComponent<Item>();
-        if (item)
+    //  ”À√—∫script coin [field: SerializeField] public int Coin { get; set; } = 0;
+    /*
+        public void OnTriggerEnter2D(Collider2D collision)
         {
-            item.PickUp(this);
+            Item item = collision.GetComponent<Item>();
+            if (item)
+            {
+                item.PickUp(this);
+            }
         }
-    }
 
-    public void AddCoin(int value)
-    {
-        Coin += value;
-        Debug.Log("Pick up a coin Total coins: " + Coin);
-    }
+        public void AddCoin(int value)
+        {
+            Coin += value;
+            Debug.Log("Pick up a coin Total coins: " + Coin);
+        }*/
 
     protected override void Awake()
     {
         base.Awake();
-        if (spriteRenderer == null)
-            spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
-
-        rb = GetComponentInChildren<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         if (rb == null)
             Debug.LogWarning("Player: Rigidbody2D not found on Player. Please add Rigidbody2D in Inspector.");
 
@@ -64,7 +62,7 @@ public class Player : Character
 
         if (handAnim == null)
         {
-            Transform hand = transform.Find("HandBow"); 
+            Transform hand = transform.Find("HandBow");
             if (hand != null)
                 handAnim = hand.GetComponent<Animator>();
 
@@ -86,14 +84,13 @@ public class Player : Character
         if (spriteRenderer != null && h != 0)
             spriteRenderer.flipX = (h < 0);
 
-        
+
         if (Input.GetButtonDown("Jump"))
             TryJump();
 
-        
+
         if (transform.position.y <= fallDeathY)
         {
-            
             GameManager.instance?.LoseLife();
         }
 
@@ -125,7 +122,7 @@ public class Player : Character
         vel.x = h * speed;
         rb.linearVelocity = vel;
 
-       
+
         bool wasGrounded = isGrounded;
         if (groundCheck != null)
             isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
@@ -179,7 +176,7 @@ public class Player : Character
         Arrow a = go.GetComponent<Arrow>();
         if (a == null) return;
 
-        
+
         SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
         float dir = 1f;
         if (sr != null)
@@ -188,7 +185,7 @@ public class Player : Character
             dir = transform.localScale.x < 0 ? -1f : 1f;
 
         a.Init(dir);
-    } 
+    }
 
 
 }
