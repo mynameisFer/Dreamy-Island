@@ -31,6 +31,24 @@ public class Player : Character
     int jumpCount;
     bool isGrounded;
 
+    [field: SerializeField] public int Coin { get; set; } = 0;
+    
+
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        Item item = collision.GetComponent<Item>();
+        if (item)
+        {
+            item.PickUp(this);
+        }
+    }
+
+    public void AddCoin(int value)
+    {
+        Coin += value;
+        Debug.Log("Pick up a coin Total coins: " + Coin);
+    }
+
     protected override void Awake()
     {
         base.Awake();
