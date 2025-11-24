@@ -27,7 +27,7 @@ public class Player : Character
     [field: SerializeField] Animator playerAnim;
     [field: SerializeField] Animator handAnim;
 
-    private Rigidbody2D rb;
+   
     public float shootCooldown = 0.2f;
     private float shootTimer = 0f;
     int jumpCount;
@@ -54,7 +54,7 @@ public class Player : Character
     protected override void Awake()
     {
         base.Awake();
-        rb = GetComponent<Rigidbody2D>();
+        //rb = GetComponent<Rigidbody2D>();
         if (rb == null)
             Debug.LogWarning("Player: Rigidbody2D not found on Player. Please add Rigidbody2D in Inspector.");
 
@@ -149,11 +149,13 @@ public class Player : Character
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.collider.CompareTag("Enemy"))
+        Enemy enemy = other.collider.GetComponent<Enemy>();
+        if (enemy != null)
         {
             GameManager.instance?.LoseLife();
         }
     }
+
 
 
     private void OnDrawGizmosSelected()

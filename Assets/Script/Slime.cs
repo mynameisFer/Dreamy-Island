@@ -21,31 +21,24 @@ public class Slime : Enemy
     {
         if (MovePoint == null || MovePoint.Length < 2) return;
 
-        // หาค่า X ซ้ายสุด – ขวาสุด จาก 2 จุด ไม่สนว่าตัวไหนคือ A หรือ B
         float leftX = Mathf.Min(MovePoint[0].position.x, MovePoint[1].position.x);
         float rightX = Mathf.Max(MovePoint[0].position.x, MovePoint[1].position.x);
 
-        // ให้ Slime ขยับไปตาม velocity
         rb.position += velocity * Time.fixedDeltaTime;
 
-        // ถึงขอบซ้าย → กลับขวา
         if (velocity.x < 0 && rb.position.x <= leftX)
         {
-            SetDirection(1);    // เดินไปขวา
+            SetDirection(1);  
         }
-        // ถึงขอบขวา → กลับซ้าย
         else if (velocity.x > 0 && rb.position.x >= rightX)
         {
-            SetDirection(-1);   // เดินไปซ้าย
+            SetDirection(-1);  
         }
     }
 
-    private void SetDirection(int dir)   // dir = -1 ซ้าย, 1 ขวา
+    private void SetDirection(int dir)   
     {
-        // เปลี่ยนความเร็วในแกน X ตามทิศ
         velocity.x = Mathf.Abs(velocity.x) * dir;
-
-        // พลิกสเกลให้หันหน้าไปทางเดียวกับทิศเดิน
         Vector3 s = transform.localScale;
         s.x = Mathf.Abs(s.x) * dir;
         transform.localScale = s;
@@ -59,18 +52,22 @@ public class Slime : Enemy
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Player"))
+        // ไม่สน Tag แล้ว ดูจากว่ามี Player component ไหม
+        Player player = collision.collider.GetComponent<Player>();
+        if (player != null)
         {
-            Player player = collision.collider.GetComponent<Player>();
-            if (player != null)
-            {
-                // ทำดาเมจเท่ากับเลือดที่เหลือ
-                player.TakeDamage(player.Health);
-
-                // หรือถ้าอยากให้ใช้ระบบชีวิตใน GameManager ด้วย
-                GameManager.instance?.LoseLife();
-            }
+            KillPlayer(player);
         }
+    }
+
+
+    private void KillPlayer(Player player)
+    {
+        if (player == null) return;
+
+        player.TakeDamage(player.Health);
+        GameManager.instance?.LoseLife();
+        Debug.Log("Slime hit player -> player should die");
     }
 
 

@@ -65,15 +65,16 @@ public abstract class Character : MonoBehaviour
 
     void Update()
     {
-        if(isUnattackableAfterHit)
+        if (isUnattackableAfterHit)
         {
-            unattackableTime -= Time.deltaTime;
-            if (unattackableTime < 0f)
-                isUnattackableAfterHit= false;
+            isUnattackableTime -= Time.deltaTime;
+            if (isUnattackableTime <= 0f)
+                isUnattackableAfterHit = false;
         }
+
     }
 
-    
+
     public virtual bool IsDead()
     {
         return currentHealth <= 0;
