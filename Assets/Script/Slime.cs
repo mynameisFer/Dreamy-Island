@@ -1,59 +1,62 @@
 ﻿using UnityEngine;
 
-public class SlimePatrol : Enemy
+public class Slime : Enemy
 {
     [Header("Movement")]
-    [SerializeField] private float speed = 2f;
-    [SerializeField] private Transform[] movePoints;   // จุด A และ B
-    private int currentPoint = 0;
+    public float moveSpeed = 2f;
+
+    [Header("Attack")]
+    public int damage = 100;   // ดาเมจของ Slime
+    public float attackCooldown = 1f; // เวลาระหว่างโจมตี
+    private float lastAttackTime = 0f;
 
     private Rigidbody2D rb;
+    private Transform player;
 
     protected override void Start()
     {
-        base.Start(); // เรียกจาก Enemy ด้วย
+        base.Start();
         rb = GetComponent<Rigidbody2D>();
 
-        // ตั้งค่าเลือด ดาเมจ หรืออะไรก็ตาม
-        attackDamage = 10;
+        GameObject p = GameObject.FindGameObjectWithTag("Player");
+        if (p != null)
+            player = p.transform;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        Patrol();
+        if (player == null || rb == null) return;
+
+        // เดินไล่ Player
+        Vector2 direction = (player.position - transform.position).normalized;
+        rb.linearVelocity = direction * moveSpeed;
     }
 
-    private void Patrol()
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        if (movePoints.Length < 2) return;
-
-        // จุดเป้าหมายที่กำลังจะเดินไป
-        Transform target = movePoints[currentPoint];
-
-        // ทิศทางจากตำแหน่งปัจจุบัน → จุดเป้าหมาย
-        Vector2 direction = (target.position - transform.position).normalized;
-
-        // เดินไป
-        rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime);
-
-        // สลับเป้าหมายเมื่อถึงจุด
-        if (Vector2.Distance(transform.position, target.position) < 0.1f)
+        if (collision.collider.CompareTag("Player"))
         {
-            currentPoint++;
-            if (currentPoint >= movePoints.Length)
-                currentPoint = 0;
-
-            Flip(direction.x);
+            TryAttack(collision.collider.GetComponent<Player>());
         }
     }
 
-    private void Flip(float dirX)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (dirX != 0)
+        if (collision.collider.CompareTag("Player"))
         {
-            Vector3 scale = transform.localScale;
-            scale.x = Mathf.Sign(dirX) * Mathf.Abs(scale.x);
-            transform.localScale = scale;
+            TryAttack(collision.collider.GetComponent<Player>());
+        }
+    }
+
+    private void TryAttack(Player player)
+    {
+        if (player == null) return;
+
+        // กันสไปค์ดาเมจถี่ๆ
+        if (Time.time - lastAttackTime >= attackCooldown)
+        {
+            player.TakeDamage(damage);
+            lastAttackTime = Time.time;
         }
     }
 }

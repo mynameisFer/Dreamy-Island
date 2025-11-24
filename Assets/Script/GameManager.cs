@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,8 +17,6 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void LoseLife()
-    {
-        Debug.Log("Player lost 1 life.");
-    }
+    
+
 }

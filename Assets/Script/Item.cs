@@ -1,7 +1,7 @@
 using UnityEngine;
 public abstract class Item : MonoBehaviour
 {
-   /* [field: SerializeField] protected int ItemValue { get; set; }
+   [field: SerializeField] protected int ItemValue { get; set; }
 
     public abstract void Use(Player player);
 
@@ -10,5 +10,5 @@ public abstract class Item : MonoBehaviour
         Use(player);
         Destroy(this.gameObject);
 
-    }*/
+    }
 }

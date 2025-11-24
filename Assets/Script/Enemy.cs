@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
-public class Enemy : Character
+public class Enemy : MonoBehaviour
 {
     public int maxHP = 3;
     public int currentHP;

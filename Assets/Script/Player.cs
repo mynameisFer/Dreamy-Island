@@ -33,8 +33,9 @@ public class Player : Character
     int jumpCount;
     bool isGrounded;
 
-    //  ”À√—∫script coin [field: SerializeField] public int Coin { get; set; } = 0;
-    /*
+    //  ”À√—∫script coin
+    [field: SerializeField] public int Coin { get; set; } = 0;
+    
         public void OnTriggerEnter2D(Collider2D collision)
         {
             Item item = collision.GetComponent<Item>();
@@ -48,7 +49,7 @@ public class Player : Character
         {
             Coin += value;
             Debug.Log("Pick up a coin Total coins: " + Coin);
-        }*/
+        }
 
     protected override void Awake()
     {
@@ -153,6 +154,7 @@ public class Player : Character
             GameManager.instance?.LoseLife();
         }
     }
+
 
     private void OnDrawGizmosSelected()
     {
