@@ -3,60 +3,93 @@
 public class Slime : Enemy
 {
     [Header("Movement")]
-    public float moveSpeed = 2f;
+    [SerializeField] Vector2 velocity;
+    public Transform[] MovePoint;
 
     [Header("Attack")]
-    public int damage = 100;   // ดาเมจของ Slime
-    public float attackCooldown = 1f; // เวลาระหว่างโจมตี
+    public int damage = 20;
+    public float attackCooldown = 1f;
     private float lastAttackTime = 0f;
-
-    private Rigidbody2D rb;
-    private Transform player;
 
     protected override void Start()
     {
         base.Start();
-        rb = GetComponent<Rigidbody2D>();
-
-        GameObject p = GameObject.FindGameObjectWithTag("Player");
-        if (p != null)
-            player = p.transform;
+        velocity = new Vector2(-1f, 0f);
     }
 
-    private void Update()
+    public override void Behavior()
     {
-        if (player == null || rb == null) return;
+        if (MovePoint == null || MovePoint.Length < 2) return;
 
-        // เดินไล่ Player
-        Vector2 direction = (player.position - transform.position).normalized;
-        rb.linearVelocity = direction * moveSpeed;
-    }
+        // หาค่า X ซ้ายสุด – ขวาสุด จาก 2 จุด ไม่สนว่าตัวไหนคือ A หรือ B
+        float leftX = Mathf.Min(MovePoint[0].position.x, MovePoint[1].position.x);
+        float rightX = Mathf.Max(MovePoint[0].position.x, MovePoint[1].position.x);
 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.collider.CompareTag("Player"))
+        // ให้ Slime ขยับไปตาม velocity
+        rb.position += velocity * Time.fixedDeltaTime;
+
+        // ถึงขอบซ้าย → กลับขวา
+        if (velocity.x < 0 && rb.position.x <= leftX)
         {
-            TryAttack(collision.collider.GetComponent<Player>());
+            SetDirection(1);    // เดินไปขวา
         }
+        // ถึงขอบขวา → กลับซ้าย
+        else if (velocity.x > 0 && rb.position.x >= rightX)
+        {
+            SetDirection(-1);   // เดินไปซ้าย
+        }
+    }
+
+    private void SetDirection(int dir)   // dir = -1 ซ้าย, 1 ขวา
+    {
+        // เปลี่ยนความเร็วในแกน X ตามทิศ
+        velocity.x = Mathf.Abs(velocity.x) * dir;
+
+        // พลิกสเกลให้หันหน้าไปทางเดียวกับทิศเดิน
+        Vector3 s = transform.localScale;
+        s.x = Mathf.Abs(s.x) * dir;
+        transform.localScale = s;
+    }
+
+
+    private void FixedUpdate()
+    {
+        Behavior();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Player"))
         {
-            TryAttack(collision.collider.GetComponent<Player>());
+            Player player = collision.collider.GetComponent<Player>();
+            if (player != null)
+            {
+                // ทำดาเมจเท่ากับเลือดที่เหลือ
+                player.TakeDamage(player.Health);
+
+                // หรือถ้าอยากให้ใช้ระบบชีวิตใน GameManager ด้วย
+                GameManager.instance?.LoseLife();
+            }
         }
     }
+
 
     private void TryAttack(Player player)
     {
         if (player == null) return;
 
-        // กันสไปค์ดาเมจถี่ๆ
         if (Time.time - lastAttackTime >= attackCooldown)
         {
             player.TakeDamage(damage);
             lastAttackTime = Time.time;
         }
+    }
+
+    private void Flip()
+    {
+        velocity.x *= -1;
+        Vector3 s = transform.localScale;
+        s.x *= -1;
+        transform.localScale = s;
     }
 }

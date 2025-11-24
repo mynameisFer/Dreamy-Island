@@ -1,31 +1,20 @@
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Character
 {
-    public int maxHP = 3;
-    public int currentHP;
-    public int attackDamage = 1;
+    public int DamageHit { get; protected set; }
 
-    protected virtual void Start()
+    public virtual void Behavior()
     {
-        currentHP = maxHP;
+        
     }
 
-    public virtual void TakeDamage(int damage)
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        currentHP -= damage;
-
-        if (currentHP <= 0)
+        var p = other.gameObject.GetComponent<Player>();
+        if (p != null)
         {
-            Die();
+            p.TakeDamage(DamageHit);
         }
     }
-
-    protected virtual void Die()
-    {
-        Destroy(gameObject);
-    }
 }
-
-

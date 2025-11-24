@@ -37,8 +37,9 @@ public abstract class Character : MonoBehaviour
     public virtual void Initialize(int hp)
     {
         startHealth = hp;
-        currentHealth = Mathf.Max(0, currentHealth);
+        currentHealth = Mathf.Max(0, hp);  
     }
+
 
     public virtual void TakeDamage(int amount)
     {
