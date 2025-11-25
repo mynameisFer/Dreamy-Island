@@ -11,11 +11,22 @@ public class Slime : Enemy
     public float attackCooldown = 1f;
     private float lastAttackTime = 0f;
 
+    [Header("Stats")]
+    public int maxHealth = 150;
+    private int currentHealth;
+
+    private void Awake()
+    {
+        maxHealth = 150;
+    }
     protected override void Start()
     {
         base.Start();
         velocity = new Vector2(-1f, 0f);
+        currentHealth = maxHealth;
     }
+
+
 
     public override void Behavior()
     {
@@ -69,7 +80,20 @@ public class Slime : Enemy
         GameManager.instance?.LoseLife();
         Debug.Log("Slime hit player -> player should die");
     }
+    public override void TakeDamage(int amount)
+    {
+        currentHealth -= amount;
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
 
+    protected virtual void Die()
+    {
+        Debug.Log("Slime die");
+        Destroy(gameObject);
+    }
 
     private void TryAttack(Player player)
     {
