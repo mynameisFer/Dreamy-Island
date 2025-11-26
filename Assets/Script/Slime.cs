@@ -5,6 +5,7 @@ public class Slime : Enemy
     [Header("Movement")]
     [SerializeField] Vector2 velocity;
     public Transform[] MovePoint;
+    private float leftX, rightX;
 
     [Header("Attack")]
     public int damage = 20;
@@ -15,46 +16,72 @@ public class Slime : Enemy
     public int maxHealth = 150;
     private int currentHealth;
 
+   
+    private Rigidbody2D rb;
+
     private void Awake()
     {
-        maxHealth = 150;
+      
+        if (maxHealth <= 0) maxHealth = 150;
+        currentHealth = maxHealth;
+
+        
+        rb = GetComponent<Rigidbody2D>();
     }
+
     protected override void Start()
     {
         base.Start();
-        velocity = new Vector2(-1f, 0f);
-        currentHealth = maxHealth;
+
+       
+        if (rb == null)
+            rb = GetComponent<Rigidbody2D>();
+
+        // default velocity
+        if (Mathf.Approximately(velocity.sqrMagnitude, 0f))
+            velocity = new Vector2(-1f, 0f);
+
+        
+        if (MovePoint == null || MovePoint.Length < 2)
+        {
+            Debug.LogWarning("Slime: MovePoint not set or < 2 — will not patrol.");
+            return;
+        }
+
+        
+        leftX = Mathf.Min(MovePoint[0].position.x, MovePoint[1].position.x);
+        rightX = Mathf.Max(MovePoint[0].position.x, MovePoint[1].position.x);
     }
-
-
 
     public override void Behavior()
     {
+       
+        if (rb == null) return;
         if (MovePoint == null || MovePoint.Length < 2) return;
 
-        float leftX = Mathf.Min(MovePoint[0].position.x, MovePoint[1].position.x);
-        float rightX = Mathf.Max(MovePoint[0].position.x, MovePoint[1].position.x);
-
+        
         rb.position += velocity * Time.fixedDeltaTime;
 
-        if (velocity.x < 0 && rb.position.x <= leftX)
+       
+        float posX = rb.position.x;
+
+        if (posX <= leftX)
         {
             SetDirection(1);  
         }
-        else if (velocity.x > 0 && rb.position.x >= rightX)
+        else if (posX >= rightX)
         {
-            SetDirection(-1);  
+            SetDirection(-1); 
         }
     }
 
-    private void SetDirection(int dir)   
+    private void SetDirection(int dir)
     {
         velocity.x = Mathf.Abs(velocity.x) * dir;
         Vector3 s = transform.localScale;
         s.x = Mathf.Abs(s.x) * dir;
         transform.localScale = s;
     }
-
 
     private void FixedUpdate()
     {
@@ -63,14 +90,12 @@ public class Slime : Enemy
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // ไม่สน Tag แล้ว ดูจากว่ามี Player component ไหม
         Player player = collision.collider.GetComponent<Player>();
         if (player != null)
         {
             KillPlayer(player);
         }
     }
-
 
     private void KillPlayer(Player player)
     {
@@ -80,6 +105,7 @@ public class Slime : Enemy
         GameManager.instance?.LoseLife();
         Debug.Log("Slime hit player -> player should die");
     }
+
     public override void TakeDamage(int amount)
     {
         currentHealth -= amount;
@@ -89,7 +115,8 @@ public class Slime : Enemy
         }
     }
 
-    protected virtual void Die()
+    
+    protected override void Die()
     {
         Debug.Log("Slime die");
         Destroy(gameObject);
