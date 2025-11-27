@@ -1,6 +1,7 @@
+using TMPro;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
-using TMPro;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -84,7 +85,18 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    
+    public void OnRestart()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void OnMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu"); 
+    }
+
     public void ShowPause(bool show)
     {
         {
@@ -92,6 +104,11 @@ public class UIManager : MonoBehaviour
             Time.timeScale = show ? 0f : 1f;
         }
     }
-    public void ShowWin(bool show) => winPanel?.SetActive(show);
+    public void ShowWin(bool show)
+    {
+        {
+            if (winPanel != null) winPanel.SetActive(show);
+        }
+    }
     public void ShowLose(bool show) => losePanel?.SetActive(show);
 }

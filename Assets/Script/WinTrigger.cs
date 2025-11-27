@@ -2,15 +2,14 @@ using UnityEngine;
 
 public class WinTrigger : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        var player = other.GetComponent<Player>();
+        if (player != null )
+        {
+            Time.timeScale = 0f;
+            UIManager.Instance?.ShowWin(true);
+            
+        }
     }
 }
