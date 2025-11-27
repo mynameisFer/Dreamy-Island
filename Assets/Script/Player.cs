@@ -32,8 +32,9 @@ public class Player : Character
     private float shootTimer = 0f;
     int jumpCount;
     bool isGrounded;
+    
 
-    //  ”À√—∫script coin
+    
     [field: SerializeField] public int Coin { get; set; } = 0;
     
         public void OnTriggerEnter2D(Collider2D collision)
@@ -48,6 +49,8 @@ public class Player : Character
         public void AddCoin(int value)
         {
             Coin += value;
+            if (UIManager.Instance != null)
+            UIManager.Instance.AddCoin(value);
             Debug.Log("Pick up a coin Total coins: " + Coin);
         }
 
@@ -76,6 +79,11 @@ public class Player : Character
     {
         base.Start();
         jumpCount = maxJump;
+        if (UIManager.Instance != null)
+        {
+
+        }
+          //  UIManager.Instance.SetupHearts(startHealth);
     }
 
 
@@ -152,7 +160,7 @@ public class Player : Character
         Enemy enemy = other.collider.GetComponent<Enemy>();
         if (enemy != null)
         {
-            GameManager.instance?.LoseLife();
+         //   GameManager.instance?.LoseLife();
         }
     }
 
@@ -169,7 +177,7 @@ public class Player : Character
 
     protected override void Die()
     {
-        GameManager.instance?.LoseLife();
+       // GameManager.instance?.LoseLife();
     }
 
     protected void Spawn()
@@ -191,5 +199,11 @@ public class Player : Character
         a.Init(dir);
     }
 
+    public override void TakeDamage(int amount)
+    {
+        base.TakeDamage(amount); 
+       /* if (UIManager.Instance != null)
+            UIManager.Instance.UpdateHearts(currentHealth);*/
+    }
 
 }

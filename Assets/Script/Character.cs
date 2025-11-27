@@ -45,22 +45,16 @@ public abstract class Character : MonoBehaviour
     {
         if (amount <= 0) return;
 
-        if (isUnattackableAfterHit) return;
-
         currentHealth -= amount;
-        currentHealth = Mathf.Max(0, currentHealth);
 
-        if (anim != null)
-            anim.SetTrigger("Hurt");
+        if (UIManager.Instance != null)
+            UIManager.Instance.UpdateHearts(currentHealth);
 
-        if (unattackableAfterHit)
+        if (currentHealth <= 0)
         {
-            isUnattackableAfterHit = true;
-            isUnattackableTime = unattackableTime;
-        }
-
-        if (IsDead())
+            GameManager.instance?.LoseLife();
             Die();
+        }
     }
 
     void Update()

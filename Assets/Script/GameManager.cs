@@ -29,16 +29,23 @@ public class GameManager : MonoBehaviour
         CurrentLife--;
         Debug.Log("LoseLife called. Life left: " + CurrentLife);
 
+        if (UIManager.Instance != null)
+            UIManager.Instance.UpdateHearts(CurrentLife);
+
         if (CurrentLife <= 0)
         {
             GameOver();
         }
-        else
-        {
-            ReloadCurrentScene();
-        }
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            bool isPaused = (Time.timeScale == 0f);
+            UIManager.Instance.ShowPause(!isPaused);
+        }
+    }
     void ReloadCurrentScene()
     {
         Scene current = SceneManager.GetActiveScene();
