@@ -13,7 +13,7 @@ public class Slime : Enemy
     private float lastAttackTime = 0f;
 
     [Header("Stats")]
-    public int maxHealth = 150;
+    public int maxHealth = 100;
     private int currentHealth;
 
    

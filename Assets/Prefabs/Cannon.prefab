@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 8796794811927336835}
   - component: {fileID: 9103441292945072199}
   - component: {fileID: 7683877895331728740}
+  - component: {fileID: -5055003726562499806}
   m_Layer: 0
   m_Name: Cannon
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -106,6 +107,35 @@ MonoBehaviour:
   unattackableTime: 0.1
   anim: {fileID: 0}
   healthBar: {fileID: 0}
+  bombPrefab: {fileID: 6003140735546893469, guid: eb503abcf0136d745a17f0861ae7ba28, type: 3}
+  Shootpoint: {fileID: 6163724446779660034}
+  fireRate: 2
+  speed: 10
+  direction: {x: -1, y: 0}
+  spread: 0
+  bombDamage: 20
+--- !u!95 &-5055003726562499806
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359934852253309395}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4533d83c148dbc349915dc3c55f2efda, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8169903556588259980
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,6 +4,8 @@ public class Enemy : Character
 {
     public int DamageHit { get; protected set; }
 
+    
+
     public virtual void Behavior()
     {
         

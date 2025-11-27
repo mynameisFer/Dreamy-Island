@@ -3,7 +3,7 @@
 public class Arrow : MonoBehaviour
 {
     public float speed = 8f;
-    public int damage = 10;
+    public int damage = 20;
     public float lifeTime = 3f;
 
     private Rigidbody2D rb;
